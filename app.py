@@ -1,6 +1,7 @@
 from flask import Flask, send_file
 import networkx as nx
 import matplotlib.pyplot as plt
+import sys
 
 app = Flask(__name__)
 
@@ -12,4 +13,6 @@ def hello_world():
    return send_file('graph.png', mimetype='image/png')
 
 if __name__ == '__main__':
-    app.run(port=6271,debug=True)
+    port=6271
+    if len(sys.argv)>1:port=sys.argv[1]
+    app.run(port=port,debug=True)
