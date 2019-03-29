@@ -21,10 +21,6 @@ RUN apk add py3-openssl
 
 RUN pip3 install --upgrade pip
 RUN pip3 install setuptools
-
-RUN pip3 install --no-deps pandas==0.23.0
-RUN pip3 -v install scikit-learn
-RUN pip3 -v install networkx
 RUN pip3 -v install hdbscan
 RUN pip3 -v install simpledbf
 RUN pip3 -v install xlrd
@@ -35,8 +31,15 @@ RUN pip3 -v install flask_restplus
 RUN pip3 -v install stringDist
 RUN pip3 -v install flask_cors
 RUN pip3 -v install simplejson
+RUN pip3 -v install --no-cache-dir --no-deps pandas==0.23.0
+RUN pip3 -v install scikit-learn
+RUN pip3 -v install matplotlib
+RUN apk update && apk upgrade
 
-RUN pip3 -v install --no-cache-dir minstall matplotlib==3.0.3
+RUN apk add git
+#RUN git clone https://github.com/matplotlib/matplotlib && cd matplotlib && python3 -mpip install . && cd ..
+RUN git clone https://github.com/networkx/networkx.git && cd networkx && python3 -mpip install . && cd ..
+
 
 #Configuration pour l'application
 RUN adduser -D app && mkdir /server && chown -R app:app /server
@@ -53,6 +56,7 @@ ADD app.py /server/app.py
 ADD test.py /server/test.py
 
 #Netoyage
-RUN apk del --purge build-base libgfortran libpng-dev freetype-dev python3-dev py-numpy-dev && rm -vrf /var/cache/apk/*
+#RUN apk del --purge build-base libgfortran libpng-dev freetype-dev python3-dev py-numpy-dev && rm -vrf /var/cache/apk/*
 
+#ENTRYPOINT ["python","app.py"]
 ENTRYPOINT ["python"]
